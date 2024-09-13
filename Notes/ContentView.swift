@@ -21,12 +21,18 @@ struct ContentView: View {
         NavigationView {
             List {
                 Section(header: Text("Categorías")) {
-                    Button("Todas las Notas") {
-                        selectedCategoryName = nil
+                    Button(action: { selectedCategoryName = nil }) {
+                        HStack {
+                            Image(systemName: "tray.full")
+                            Text("Todas las Notas")
+                        }
                     }
                     ForEach(categories) { category in
-                        Button(category.name) {
-                            selectedCategoryName = category.name
+                        Button(action: { selectedCategoryName = category.name }) {
+                            HStack {
+                                Image(systemName: category.iconName)
+                                Text(category.name)
+                            }
                         }
                     }
                 }
@@ -39,10 +45,14 @@ struct ContentView: View {
                             Text(note.content)
                                 .font(.subheadline)
                                 .lineLimit(2)
-                            if let categoryName = note.categoryName {
-                                Text(categoryName)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                            if let categoryName = note.categoryName,
+                               let category = categories.first(where: { $0.name == categoryName }) {
+                                HStack {
+                                    Image(systemName: category.iconName)
+                                    Text(categoryName)
+                                }
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
                         }
                         .onTapGesture {

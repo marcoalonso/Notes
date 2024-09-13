@@ -34,7 +34,10 @@ struct NoteEditorView: View {
                 Picker("Categoría", selection: $selectedCategoryName) {
                     Text("Sin categoría").tag(nil as String?)
                     ForEach(categories) { category in
-                        Text(category.name).tag(category.name as String?)
+                        HStack {
+                            Image(systemName: category.iconName)
+                            Text(category.name)
+                        }.tag(category.name as String?)
                     }
                 }
             }
