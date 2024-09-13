@@ -19,80 +19,81 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("Categorías")) {
-                    Button(action: { selectedCategoryName = nil }) {
-                        HStack {
-                            Image(systemName: "tray.full")
-                            Text("Todas las Notas")
-                        }
-                    }
-                    ForEach(categories) { category in
-                        Button(action: { selectedCategoryName = category.name }) {
-                            HStack {
-                                Image(systemName: category.iconName)
-                                Text(category.name)
-                            }
-                        }
-                    }
-                }
-                
-                Section(header: Text("Notas")) {
-                    ForEach(filteredNotes) { note in
-                        VStack(alignment: .leading) {
-                            Text(note.title)
-                                .font(.headline)
-                            Text(note.content)
-                                .font(.subheadline)
-                                .lineLimit(2)
-                            if let categoryName = note.categoryName,
-                               let category = categories.first(where: { $0.name == categoryName }) {
+                List {
+                    Section(header: Text("Categorías")) {
+                        ForEach(categories) { category in
+                            Button(action: { selectedCategoryName = category.name }) {
                                 HStack {
                                     Image(systemName: category.iconName)
-                                    Text(categoryName)
+                                    Text(category.name)
                                 }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
                             }
                         }
-                        .onTapGesture {
-                            selectedNote = note
+                        Button(action: { selectedCategoryName = nil }) {
+                            HStack {
+                                Image(systemName: "tray.full")
+                                Text("Todas las Notas")
+                            }
                         }
                     }
-                    .onDelete(perform: deleteNotes)
-                }
-            }
-            .navigationTitle("Notas")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { isAddingNote = true }) {
-                        Label("Añadir Nota", systemImage: "square.and.pencil")
+                    
+                    Section(header: Text("Notas")) {
+                        ForEach(filteredNotes) { note in
+                            VStack(alignment: .leading) {
+                                Text(note.title)
+                                    .font(.headline)
+                                Text(note.content)
+                                    .font(.subheadline)
+                                    .lineLimit(2)
+                                if let categoryName = note.categoryName,
+                                   let category = categories.first(where: { $0.name == categoryName }) {
+                                    HStack {
+                                        Image(systemName: category.iconName)
+                                        Text(categoryName)
+                                    }
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                }
+                            }
+                            .onTapGesture {
+                                selectedNote = note
+                            }
+                        }
+                        .onDelete(perform: deleteNotes)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { isAddingCategory = true }) {
-                        Label("Añadir Categoría", systemImage: "folder.badge.plus")
+                .navigationTitle("Notas")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: { isAddingNote = true }) {
+                            Label("Añadir Nota", systemImage: "plus")
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: { isAddingCategory = true }) {
+                            Label("Añadir Categoría", systemImage: "folder.badge.plus")
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $isAddingNote) {
-                NoteEditorView(note: nil, categories: categories) { newNote in
-                    addNote(newNote)
-                    isAddingNote = false
+                .sheet(isPresented: $isAddingNote) {
+                    NoteEditorView(note: nil, categories: categories) { newNote in
+                        addNote(newNote)
+                        isAddingNote = false
+                    }
                 }
-            }
-            .sheet(item: $selectedNote) { note in
-                NoteEditorView(note: note, categories: categories) { updatedNote in
-                    updateNote(note, with: updatedNote)
-                    selectedNote = nil
+                .sheet(item: $selectedNote) { note in
+                    NoteEditorView(note: note, categories: categories) { updatedNote in
+                        updateNote(note, with: updatedNote)
+                        selectedNote = nil
+                    }
                 }
-            }
-            .sheet(isPresented: $isAddingCategory) {
-                CategoryEditorView { newCategory in
-                    addCategory(newCategory)
-                    isAddingCategory = false
+                .sheet(isPresented: $isAddingCategory) {
+                    CategoryEditorView { newCategory in
+                        addCategory(newCategory)
+                        isAddingCategory = false
+                    }
                 }
-            }
+            
         }
     }
     
