@@ -9,14 +9,16 @@ import SwiftUI
 import SwiftData
 
 @Model
-class Note {
+final class Note {
     var title: String
     var content: String
     var createdAt: Date
+    var categoryName: String?
     
-    init(title: String, content: String) {
+    init(title: String, content: String, categoryName: String? = nil) {
         self.title = title
         self.content = content
         self.createdAt = Date()
+        self.categoryName = categoryName
     }
 }
