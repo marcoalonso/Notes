@@ -13,7 +13,7 @@ struct CategoryEditorView: View {
     let onSave: (Category) -> Void
     @Environment(\.dismiss) private var dismiss
     
-    let icons = ["folder", "tag", "bookmark", "paperclip", "link", "star", "flag", "bell", "clock", "calendar", "house", "building", "car", "person"]
+    let icons = ["folder", "bookmark", "star", "flag", "bell", "clock", "calendar", "house", "car", "person"]
     
     var body: some View {
         NavigationView {
